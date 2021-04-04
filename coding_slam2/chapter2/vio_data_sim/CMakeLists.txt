@@ -1,0 +1,28 @@
+cmake_minimum_required(VERSION 3.10)
+SET(PROJECT_NAME imuSimWithPointLine)
+
+PROJECT(${PROJECT_NAME})
+
+SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake_modules/")
+
+find_package(Eigen3 REQUIRED)
+find_package(OpenCV REQUIRED)
+find_package(Sophus REQUIRED)
+
+include_directories(
+        ${EIGEN3_INCLUDE_DIR}
+        ${SOPHUS_INCLUDE_DIR} # for both sophus and geographiclib
+        ${OPENCV_INCLUDE_DIR}
+)
+
+LIST(APPEND LINK_LIBS
+        ${OpenCV_LIBS}
+        ${Sophus_LIBRARIES}
+        )
+
+ADD_EXECUTABLE(data_gen main/gener_alldata.cpp src/param.h src/param.cpp src/utilities.h src/utilities.cpp src/imu.h src/imu.cpp)
+TARGET_LINK_LIBRARIES(data_gen ${LINK_LIBS})
